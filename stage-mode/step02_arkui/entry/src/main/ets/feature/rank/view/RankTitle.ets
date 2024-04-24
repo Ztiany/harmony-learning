@@ -20,6 +20,7 @@ export struct TitleComponent {
           .width(TitleBarStyle.IMAGE_BACK_SIZE)
           .margin({ right: TitleBarStyle.IMAGE_BACK_MARGIN_RIGHT })
           .onClick(() => {
+            // 获取 UIAbility 对应的 Context，然后终结自己。
             let handler = getContext(this) as AppContext.UIAbilityContext;
             handler.terminateSelf();
           })
@@ -40,6 +41,7 @@ export struct TitleComponent {
       }
       .width(TitleBarStyle.WEIGHT)
       .height(WEIGHT)
+      // 设置子组件在主轴方向上的对齐格式。
       .justifyContent(FlexAlign.End)
     }
     .width(WEIGHT)

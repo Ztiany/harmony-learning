@@ -7,6 +7,7 @@ export default struct ToDoItem {
 
   @Builder labelIcon(icon: Resource) {
     Image(icon)
+      // 缩放类型
       .objectFit(ImageFit.Contain)
         /* 引用资源 */
       .width($r('app.float.checkbox_width'))
