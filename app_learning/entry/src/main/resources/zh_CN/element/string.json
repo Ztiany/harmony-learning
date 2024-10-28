@@ -1,0 +1,32 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "模块描述"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "App Learning"
+    },
+    {
+      "name": "AppMultitonAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "AppMultitonAbility_label",
+      "value": "App Multiton Ability"
+    },
+    {
+      "name": "AppSpecifiedAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "AppSpecifiedAbility_label",
+      "value": "label"
+    }
+  ]
+}

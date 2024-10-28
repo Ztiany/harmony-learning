@@ -1,0 +1,79 @@
+{
+  "module": {
+    "name": "entry",
+    "type": "entry",
+    "srcEntry": "./ets/AppAbilityStage.ets",
+    "description": "$string:module_desc",
+    "mainElement": "EntryAbility",
+    "deviceTypes": [
+      "phone",
+      "tablet",
+      "2in1"
+    ],
+    "deliveryWithInstall": true,
+    "installationFree": false,
+    "pages": "$profile:main_pages",
+    "requestPermissions": [
+      {
+        "name": "ohos.permission.INTERNET"
+      }
+    ],
+    "abilities": [
+      {
+        "name": "EntryAbility",
+        "launchType": "singleton",
+        "srcEntry": "./ets/entryability/EntryAbility.ets",
+        "description": "$string:EntryAbility_desc",
+        "icon": "$media:layered_image",
+        "label": "$string:EntryAbility_label",
+        "startWindowIcon": "$media:startIcon",
+        "startWindowBackground": "$color:start_window_background",
+        "exported": true,
+        "skills": [
+          {
+            "entities": [
+              "entity.system.home"
+            ],
+            "actions": [
+              "action.system.home"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "AppMultitonAbility",
+        "srcEntry": "./ets/appmultitonability/AppMultitonAbility.ets",
+        "description": "$string:AppMultitonAbility_desc",
+        "icon": "$media:layered_image",
+        "label": "$string:AppMultitonAbility_label",
+        "startWindowIcon": "$media:startIcon",
+        "startWindowBackground": "$color:start_window_background",
+        "launchType": "multiton"
+      },
+      {
+        "name": "AppSpecifiedAbility",
+        "srcEntry": "./ets/appspecifiedability/AppSpecifiedAbility.ets",
+        "description": "$string:AppSpecifiedAbility_desc",
+        "icon": "$media:layered_image",
+        "label": "$string:AppSpecifiedAbility_label",
+        "startWindowIcon": "$media:startIcon",
+        "startWindowBackground": "$color:start_window_background",
+        "launchType": "specified"
+      }
+    ],
+    "extensionAbilities": [
+      {
+        "name": "EntryBackupAbility",
+        "srcEntry": "./ets/entrybackupability/EntryBackupAbility.ets",
+        "type": "backup",
+        "exported": false,
+        "metadata": [
+          {
+            "name": "ohos.extension.backup",
+            "resource": "$profile:backup_config"
+          }
+        ],
+      }
+    ]
+  },
+}

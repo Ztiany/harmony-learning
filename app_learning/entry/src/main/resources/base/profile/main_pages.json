@@ -1,0 +1,16 @@
+{
+  "src": [
+    "pages/main/Index",
+    "pages/arkui/ArkUIMainPage",
+    "pages/network/NetworkPage",
+    "pages/practice/PracticePage",
+    "pages/practice/todo/ToDoListPage",
+    "pages/ability/AbilityPage",
+    "pages/ability/AppMultitonPage",
+    "pages/ability/AppSpecifiedPage",
+    "pages/arkui/clayout/CustomizeLayoutPage",
+    "pages/arkui/lifecycle/ComponentLifecyclePage",
+    "pages/arkui/builder/BuilderPage",
+    "pages/arkui/cdraw2d/CustomDrawPage"
+  ]
+}
