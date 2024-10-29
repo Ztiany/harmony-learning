@@ -1,8 +1,6 @@
 @Entry
 @Component
-struct NetworkPage {
-  @State message: string = 'Hello World';
-
+struct AppStateManagementV2Page {
   build() {
     RelativeContainer() {
       Text("TODO")

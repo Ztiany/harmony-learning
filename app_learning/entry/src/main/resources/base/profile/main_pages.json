@@ -1,16 +1,24 @@
 {
   "src": [
-    "pages/main/Index",
+    "pages/Index",
     "pages/arkui/ArkUIMainPage",
+    "pages/arkui/lifecycle/ComponentLifecyclePage",
+    "pages/arkui/builder/BuilderPage",
+    "pages/arkui/statev1/StateManagementV1Page",
+    "pages/arkui/statev1/AppStateManagementV1Page",
+    "pages/arkui/statev2/StateManagementV2Page",
+    "pages/arkui/statev2/AppStateManagementV2Page",
+    "pages/parch/PageArchitectPage",
+    "pages/event/EventPage",
+    "pages/clad/CladPage",
+    "pages/clad/cdraw2d/CustomDrawPage",
+    "pages/clad/clayout/CustomizeLayoutPage",
     "pages/network/NetworkPage",
     "pages/practice/PracticePage",
     "pages/practice/todo/ToDoListPage",
     "pages/ability/AbilityPage",
     "pages/ability/AppMultitonPage",
     "pages/ability/AppSpecifiedPage",
-    "pages/arkui/clayout/CustomizeLayoutPage",
-    "pages/arkui/lifecycle/ComponentLifecyclePage",
-    "pages/arkui/builder/BuilderPage",
-    "pages/arkui/cdraw2d/CustomDrawPage"
+    "pages/storage/StoragePage"
   ]
 }

@@ -55,6 +55,7 @@ const DOMAIN_NUMBER: number = 0xFF00;
  */
 export default class EntryAbility extends UIAbility {
   windowStage: window.WindowStage | undefined = undefined;
+  sharedStorage: LocalStorage = new LocalStorage();
 
   /*
    Create 状态，在 UIAbility 实例创建时触发，系统会调用 onCreate 回调。可以在 onCreate 回调中进行相关初始化操作。
@@ -63,6 +64,7 @@ export default class EntryAbility extends UIAbility {
    */
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
     hilog.info(DOMAIN_NUMBER, TAG, '%{public}s', 'Ability onCreate');
+    this.sharedStorage.setOrCreate("name", "EntryAbility")
   }
 
   /*
@@ -114,11 +116,16 @@ export default class EntryAbility extends UIAbility {
     // Main window is created, set main page for this ability
     hilog.info(DOMAIN_NUMBER, TAG, '%{public}s', 'Ability onWindowStageCreate');
 
-    windowStage.loadContent('pages/main/Index', (err) => {
+    windowStage.loadContent('pages/Index', this.sharedStorage, (err) => {
       if (err.code) {
         hilog.error(DOMAIN_NUMBER, TAG, 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
         return;
       }
+      // PersistentStorage 和 UI 实例相关联，持久化操作需要在 UI 实例初始化成功后（即 loadContent 传入的回调被调用时）才可以被调用，早于
+      // 该时机调用会导致持久化失败。
+      PersistentStorage.persistProp("number", -100)
+      // 将设备的语言 code 存入 AppStorage，如果 Environment 中没有 languageCode，则设置为默认值 en。
+      Environment.envProp("languageCode", "en");
       hilog.info(DOMAIN_NUMBER, TAG, 'Succeeded in loading the content.');
     });
   }

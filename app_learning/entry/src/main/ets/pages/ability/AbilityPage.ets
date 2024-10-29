@@ -1,9 +1,8 @@
 import { common, Want } from '@kit.AbilityKit';
-import { hilog } from '@kit.PerformanceAnalysisKit';
 import { BusinessError } from '@kit.BasicServicesKit';
+import { logger } from '../../utils/Logger';
 
-const TAG: string = '[Page_Ability]';
-const DOMAIN_NUMBER: number = 0xFF00;
+const TAG: string = 'AbilityPage';
 
 /**
  UIAbility 的启动模式是指 UIAbility 实例在启动时的不同呈现状态。针对不同的业务场景，系统提供了三种启动模式：
@@ -38,12 +37,13 @@ struct AbilityPage {
             bundleName: 'me.ztiany.harmony.app',
             abilityName: 'AppMultitonAbility',
           };
-          context.startAbility(want).then(() => {
-            hilog.info(DOMAIN_NUMBER, TAG, 'Succeeded in starting AppMultitonAbility.');
-          }).catch((err: BusinessError) => {
-            hilog.error(DOMAIN_NUMBER, TAG,
-              `Failed to start SpecifiedAbility. Code is ${err.code}, message is ${err.message}`);
-          })
+          context.startAbility(want)
+            .then(() => {
+              logger.i(TAG, 'Succeeded in starting AppMultitonAbility.');
+            })
+            .catch((err: BusinessError) => {
+              logger.i(TAG, `Failed to start SpecifiedAbility. Code is ${err.code}, message is ${err.message}`);
+            })
         })
 
 
@@ -60,12 +60,40 @@ struct AbilityPage {
               "openId": "fixedOpenId"
             }
           };
-          context.startAbility(want).then(() => {
-            hilog.info(DOMAIN_NUMBER, TAG, 'Succeeded in starting AppMultitonAbility.');
-          }).catch((err: BusinessError) => {
-            hilog.error(DOMAIN_NUMBER, TAG,
-              `Failed to start SpecifiedAbility. Code is ${err.code}, message is ${err.message}`);
-          })
+          context.startAbility(want)
+            .then(() => {
+              logger.i(TAG, 'Succeeded in starting AppMultitonAbility.');
+            })
+            .catch((err: BusinessError) => {
+              logger.i(TAG, `Failed to start SpecifiedAbility. Code is ${err.code}, message is ${err.message}`);
+            })
+        })
+
+
+      // 打开其他应用的 UIAbility
+      Button("Open Browser")
+        .margin(10)
+        .onClick(() => {
+          let context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
+          let want: Want = {
+            // 类型
+            entities: ['entity.system.browsable'],
+            // 动作
+            action: 'ohos.want.action.viewData',
+            // 数据
+            uri: 'https://www.huawei.com/cn/'
+          };
+          context.startAbility(want)
+            .then(() => {
+              logger.i(TAG, 'Succeeded in starting AppMultitonAbility.');
+            })
+            .catch((err: BusinessError) => {
+              this.getUIContext().getPromptAction().showToast({
+                message: `${err.message}`,
+                duration: 2000
+              })
+              logger.i(TAG, `Failed to start SpecifiedAbility. Code is ${err.code}, message is ${err.message}`);
+            })
         })
 
     }

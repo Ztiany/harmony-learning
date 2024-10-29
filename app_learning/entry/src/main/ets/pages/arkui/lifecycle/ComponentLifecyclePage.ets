@@ -6,12 +6,11 @@ import { LifecycleComponent } from './LifecycleComponent';
 @Entry
 @Component
 struct ComponentLifecyclePage {
-  @State message: string = 'Hello World';
-
   build() {
-    RelativeContainer() {
+    Stack() {
       LifecycleComponent()
     }
+    .alignContent(Alignment.Center)
     .height('100%')
     .width('100%')
   }

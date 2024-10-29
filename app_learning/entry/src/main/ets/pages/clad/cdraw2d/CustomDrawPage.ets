@@ -1,7 +1,9 @@
+/**
+ * 演示如果进行自定义绘制。
+ */
 @Entry
 @Component
-struct NetworkPage {
-  @State message: string = 'Hello World';
+struct CustomDrawPage {
 
   build() {
     RelativeContainer() {

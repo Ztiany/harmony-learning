@@ -2,7 +2,7 @@
   "module": {
     "name": "entry",
     "type": "entry",
-    "srcEntry": "./ets/AppAbilityStage.ets",
+    "srcEntry": "./ets/EntryAbilityStage.ets",
     "description": "$string:module_desc",
     "mainElement": "EntryAbility",
     "deviceTypes": [
@@ -72,7 +72,7 @@
             "name": "ohos.extension.backup",
             "resource": "$profile:backup_config"
           }
-        ],
+        ]
       }
     ]
   },

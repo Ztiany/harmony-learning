@@ -1,6 +1,6 @@
 @Entry
 @Component
-struct NetworkPage {
+struct StoragePage {
   @State message: string = 'Hello World';
 
   build() {

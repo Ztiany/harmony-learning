@@ -1,3 +1,5 @@
+import NamedDivider from '../../../widget/NamedDivider';
+
 /**
  * 演示使用 Builder  装饰器自定义组件及其相关用法：
  *
@@ -38,7 +40,7 @@ struct BuilderPage {
     Scroll() {
       Column() {
 
-        Divider().height(10)
+        NamedDivider({ name: "@Builder" })
         overBuilderByReference1({
           param: this.counter
         })
@@ -53,7 +55,7 @@ struct BuilderPage {
           .width('50%')
 
 
-        Divider().height(10)
+        NamedDivider({ name: "@BuilderParam" })
         Child({ customBuilderParam: this.componentBuilder })
         Child({
           // 通过箭头函数，保持 this 的引用为当前 BuilderPage。
@@ -61,25 +63,31 @@ struct BuilderPage {
             this.componentBuilder()
           }
         })
+
+
+        NamedDivider({ name: "@LocalBuilder" })
         Child({ customBuilderParam: this.localComponentBuilder })
 
 
-        Divider().height(10)
+        NamedDivider({ name: "WrappedBuilder" })
         wrappedOverBuilderByValue.builder(10)
 
 
-        Divider().height(10)
+        NamedDivider({ name: "@Styles" })
         Text("I am a Text")
           .redFrame()
+
+
+        NamedDivider({ name: "@Extend" })
         Text("I am a Text")
           .redText()
 
 
-        Divider().height(10)
+        NamedDivider({ name: "stateStyles" })
         Button("I am a Button").multiStatedButton()
 
 
-        Divider().height(10)
+        NamedDivider({ name: "@AnimatableExtend" })
         Text("AnimatableProperty")
           .animatableWidth(this.textWidth)
           .animation({ duration: 2000, curve: Curve.Ease })
@@ -89,7 +97,7 @@ struct BuilderPage {
           })
 
 
-        Divider().height(10)
+        NamedDivider({ name: "@Require" })
         StrictChild({
           label: "Parent Label"
         })
@@ -97,6 +105,7 @@ struct BuilderPage {
       }
       .width('100%')
     }
+    .align(Alignment.Top)
     .scrollable(ScrollDirection.Vertical)
     .height('100%')
     .width('100%')
@@ -125,7 +134,7 @@ function overBuilderByReference$$($$: Reference) {
   Row() {
     Text(`UseStateVarByReference$$: ${$$.param} `)
     // 虽然传参是一个值，但是 $$ 保证其作为引用传递。
-    HelloComponent({ message: $$.param })
+    NestedChild({ message: $$.param })
   }
 }
 
@@ -141,12 +150,12 @@ function overBuilderByValue(params: number) {
 }
 
 @Component
-struct HelloComponent {
+struct NestedChild {
   @Prop message: number;
 
   build() {
     Row() {
-      Text(`HelloComponent: ${this.message}`)
+      Text(`NestedChild: ${this.message}`)
     }
   }
 }

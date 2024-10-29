@@ -1,6 +1,20 @@
-import { buildEntrance } from './Data'
-import { Entrance } from '../../entrance/Entrance'
-import { EntranceList } from '../../entrance/EntranceList'
+import { Entrance, PageEntrance } from '../entrance/Entrance'
+import { EntranceList } from '../entrance/EntranceList'
+
+function buildEntrance(): Array<Entrance> {
+  return [
+    new PageEntrance("UI 组件及其状态", "pages/arkui/ArkUIMainPage"),
+    new PageEntrance("自定义布局与绘制", "pages/clad/CladPage"),
+    new PageEntrance("Page Architecture", "pages/parch/PageArchitectPage"),
+    new PageEntrance("自适应与响应式布局", "pages/arkui/ArkUIMainPage"),
+    new PageEntrance("Ability 之间的交互", "pages/ability/AbilityPage"),
+    new PageEntrance("事件通知机制", "pages/ability/AbilityPage"),
+    new PageEntrance("网络技术应用", "pages/network/NetworkPage"),
+    new PageEntrance("数据持久化", "pages/network/NetworkPage"),
+    new PageEntrance("多媒体技术", "pages/network/NetworkPage"),
+    new PageEntrance("Practice Demo", "pages/practice/PracticePage")
+  ]
+}
 
 @Entry
 @Component
