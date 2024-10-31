@@ -19,7 +19,8 @@ struct PracticePage {
 
   private buildEntrance(): Array<Entrance> {
     return [
-      new PageEntrance("TODO List", "pages/practice/todo/ToDoListPage")
+      new PageEntrance("TODO List", "pages/practice/todo/ToDoListPage"),
+      new PageEntrance("HarmonyWorld Home", "pages/practice/hworldh/HarmonyWorldHomePage"),
     ]
   }
 }

@@ -1,6 +1,6 @@
 @Entry
 @Component
-struct StoragePage {
+struct AdaptiveAndResponsivePage {
   build() {
     RelativeContainer() {
       Text("TODO")

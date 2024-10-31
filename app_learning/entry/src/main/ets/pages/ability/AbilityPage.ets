@@ -1,5 +1,6 @@
 import { common, Want } from '@kit.AbilityKit';
 import { BusinessError } from '@kit.BasicServicesKit';
+import AppMultitonAbility from '../../appmultitonability/AppMultitonAbility';
 import { logger } from '../../utils/Logger';
 
 const TAG: string = 'AbilityPage';
@@ -36,10 +37,42 @@ struct AbilityPage {
             deviceId: '', // deviceId 为空表示本设备
             bundleName: 'me.ztiany.harmony.app',
             abilityName: 'AppMultitonAbility',
+            // parameters 为自定义信息参数
+            parameters: {
+              needResult: false
+            }
           };
           context.startAbility(want)
             .then(() => {
               logger.i(TAG, 'Succeeded in starting AppMultitonAbility.');
+            })
+            .catch((err: BusinessError) => {
+              logger.i(TAG, `Failed to start SpecifiedAbility. Code is ${err.code}, message is ${err.message}`);
+            })
+        })
+
+      // 打开 multiton 模式的 Ability，并且获取结果
+      Button("Open AppMultitonAbility for Result")
+        .margin(10)
+        .onClick(() => {
+          let context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
+          let want: Want = {
+            deviceId: '', // deviceId 为空表示本设备
+            bundleName: 'me.ztiany.harmony.app',
+            abilityName: 'AppMultitonAbility',
+            // parameters 为自定义信息参数
+            parameters: {
+              needResult: true
+            }
+          };
+
+          context.startAbilityForResult(want)
+            .then((data) => {
+              logger.i(TAG, 'Succeeded in starting AppMultitonAbility.');
+              if (data?.resultCode == AppMultitonAbility.KEY_FOR_RESULT_CODE) {
+                logger.i(TAG, `get result from AppMultitonAbility: ${data.want?.parameters &&
+                data.want?.parameters["AppMultitonAbilityKey"]}`);
+              }
             })
             .catch((err: BusinessError) => {
               logger.i(TAG, `Failed to start SpecifiedAbility. Code is ${err.code}, message is ${err.message}`);

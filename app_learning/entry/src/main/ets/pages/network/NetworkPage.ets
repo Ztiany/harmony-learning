@@ -1,22 +1,28 @@
+import { Entrance, PageEntrance } from '../../entrance/Entrance';
+import { EntranceList } from '../../entrance/EntranceList';
+
+function buildEntrance(): Array<Entrance> {
+  return [
+    new PageEntrance("Web 加载远程网页", "pages/network/web/RemoteWebPage"),
+    new PageEntrance("Web 加载本地网页", "pages/network/web/LocalWebPage"),
+    new PageEntrance("Http 请求", "pages/network/http/HttpRequestPage"),
+  ]
+}
+
 @Entry
 @Component
 struct NetworkPage {
-  @State message: string = 'Hello World';
+  @State list: Array<Entrance> = buildEntrance()
 
   build() {
-    RelativeContainer() {
-      Text("TODO")
-        .fontSize(40)
-        .fontColor("#FF0000")
-        .alignRules({
-          middle: {
-            anchor: "__container__",
-            align: HorizontalAlign.Center
-          },
-          center: {
-            anchor: "__container__",
-            align: VerticalAlign.Center
-          },
+    Column() {
+      Text("Harmony App Learning")
+        .fontSize(24)
+        .fontWeight(FontWeight.Bold)
+
+      EntranceList({ list: this.list })
+        .margin({
+          top: 20
         })
     }
     .height('100%')

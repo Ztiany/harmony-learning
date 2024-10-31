@@ -19,6 +19,14 @@
     "pages/ability/AbilityPage",
     "pages/ability/AppMultitonPage",
     "pages/ability/AppSpecifiedPage",
-    "pages/storage/StoragePage"
+    "pages/storage/StoragePage",
+    "pages/practice/hworldh/HarmonyWorldHomePage",
+    "pages/network/web/RemoteWebPage",
+    "pages/network/web/LocalWebPage",
+    "pages/parch/tabs/TabsPage",
+    "pages/parch/navigation/NavigationPage",
+    "pages/network/http/HttpRequestPage",
+    "pages/media/MediaPage",
+    "pages/adares/AdaptiveAndResponsivePage"
   ]
 }

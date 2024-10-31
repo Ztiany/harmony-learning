@@ -1,6 +1,6 @@
 @Entry
 @Component
-struct StoragePage {
+struct MediaPage {
   build() {
     RelativeContainer() {
       Text("TODO")

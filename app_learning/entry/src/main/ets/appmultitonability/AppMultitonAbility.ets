@@ -1,45 +1,55 @@
 import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
+import { logger } from '../utils/Logger';
 
-const TAG: string = '[AppMultitonAbility]';
-
-const DOMAIN_NUMBER: number = 0xFF00;
+const TAG: string = 'AppMultitonAbility';
 
 export default class AppMultitonAbility extends UIAbility {
+  /**
+   * 用于和页面进行通信。
+   */
+  private sharedStorage = new LocalStorage()
+  static readonly KEY_FOR_NEED_RESULT = "AppMultitonAbility-NeedResult"
+  static readonly KEY_FOR_RESULT_CODE = 1001
+  static readonly KEY_FOR_RESULT_ABILITY = "EntryAbility"
+
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
-    hilog.info(DOMAIN_NUMBER, TAG, '%{public}s', 'Ability onCreate');
+    const needResult = want.parameters?.needResult && (want.parameters?.needResult as boolean)
+    logger.i(TAG, '%{public}s', `AppMultitonAbility onCreate. needResult = ${needResult}`);
+    // 用于告知页面，在退出时，需要带回数据。
+    this.sharedStorage.setOrCreate(AppMultitonAbility.KEY_FOR_NEED_RESULT, needResult)
   }
 
   onDestroy(): void {
-    hilog.info(DOMAIN_NUMBER, TAG, '%{public}s', 'Ability onDestroy');
+    logger.i(TAG, '%{public}s', 'AppMultitonAbility onDestroy');
   }
 
   onWindowStageCreate(windowStage: window.WindowStage): void {
     // Main window is created, set main page for this ability
-    hilog.info(DOMAIN_NUMBER, TAG, '%{public}s', 'Ability onWindowStageCreate');
+    logger.i(TAG, '%{public}s', 'AppMultitonAbility onWindowStageCreate');
 
-    windowStage.loadContent('pages/ability/AppMultitonPage', (err) => {
+    windowStage.loadContent('pages/ability/AppMultitonPage', this.sharedStorage, (err) => {
       if (err.code) {
-        hilog.error(DOMAIN_NUMBER, TAG, 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
+        logger.e(TAG, 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
         return;
       }
-      hilog.info(DOMAIN_NUMBER, TAG, 'Succeeded in loading the content.');
+      logger.i(TAG, 'Succeeded in loading the content.');
     });
   }
 
   onWindowStageDestroy(): void {
     // Main window is destroyed, release UI related resources
-    hilog.info(DOMAIN_NUMBER, TAG, '%{public}s', 'Ability onWindowStageDestroy');
+    logger.i(TAG, '%{public}s', 'AppMultitonAbility onWindowStageDestroy');
   }
 
   onForeground(): void {
     // Ability has brought to foreground
-    hilog.info(DOMAIN_NUMBER, TAG, '%{public}s', 'Ability onForeground');
+    logger.i(TAG, '%{public}s', 'AppMultitonAbility onForeground');
   }
 
   onBackground(): void {
     // Ability has back to background
-    hilog.info(DOMAIN_NUMBER, TAG, '%{public}s', 'Ability onBackground');
+    logger.i(TAG, '%{public}s', 'AppMultitonAbility onBackground');
   }
 }

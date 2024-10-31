@@ -1,11 +1,10 @@
 import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
-import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
 import { BusinessError } from '@kit.BasicServicesKit';
+import { logger } from '../utils/Logger';
+import { promptAction } from '@kit.ArkUI'
 
-const TAG: string = '[EntryAbility]';
-
-const DOMAIN_NUMBER: number = 0xFF00;
+const TAG: string = 'EntryAbility';
 
 /**
  * UIAbility 是一种包含用户界面的应用组件，主要用于和用户进行交互。UIAbility 也是系统调度的单元，为应用提供窗口在其中绘制界面。
@@ -55,7 +54,9 @@ const DOMAIN_NUMBER: number = 0xFF00;
  */
 export default class EntryAbility extends UIAbility {
   windowStage: window.WindowStage | undefined = undefined;
+  /** 用于应用状态管理，UIAbility 可以勇敢 AppStorage 或者是共享的 LocalStorage 与具体的 UI 页面进行通讯。*/
   sharedStorage: LocalStorage = new LocalStorage();
+  static readonly UI_EVENT: string = "EntryAbility-EVENT"
 
   /*
    Create 状态，在 UIAbility 实例创建时触发，系统会调用 onCreate 回调。可以在 onCreate 回调中进行相关初始化操作。
@@ -63,8 +64,26 @@ export default class EntryAbility extends UIAbility {
    后续的 UI 页面展示。
    */
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
-    hilog.info(DOMAIN_NUMBER, TAG, '%{public}s', 'Ability onCreate');
+    logger.i(TAG, '%{public}s', 'Ability onCreate');
     this.sharedStorage.setOrCreate("name", "EntryAbility")
+
+    /*
+     * UIAbility 类拥有自身的上下文信息，该信息为 UIAbilityContext 类的实例，UIAbilityContext 类拥有 abilityInfo、currentHapModuleInfo
+     * 等属性。通过 UIAbilityContext 可以获取 UIAbility 的相关配置信息，如包代码路径、Bundle 名称、Ability 名称和应用程序需要的环境状态等
+     * 属性信息，以及可以获取操作UIAbility实例的方法（如 startAbility()、connectServiceExtensionAbility()、terminateSelf() 等）。
+     */
+    logger.d(TAG, JSON.stringify(this.context.abilityInfo))
+
+    // EventHub 为 UIAbility 组件提供了事件机制，使它们能够进行订阅、取消订阅和触发事件等数据通信能力。
+    // 下面通过 on 订阅事件，在具体的 UI 中，可以通过 eventHub 的 emit 来发送事件。
+    this.context.eventHub.on(EntryAbility.UI_EVENT, (data: string) => {
+      logger.i(TAG, `Received ${EntryAbility.UI_EVENT}: ${data}`)
+      // promptAction 用于弹出 toast。
+      promptAction.showToast({
+        message: `received: ${data}`,
+        duration: 2000
+      })
+    })
   }
 
   /*
@@ -87,38 +106,42 @@ export default class EntryAbility extends UIAbility {
         let stageEventType: window.WindowStageEventType = data;
         switch (stageEventType) {
           case window.WindowStageEventType.SHOWN: // 切到前台
-            hilog.info(DOMAIN_NUMBER, TAG, `windowStage foreground.`);
+            logger.i(TAG, `windowStage foreground.`);
             break;
           case window.WindowStageEventType.ACTIVE: // 获焦状态
-            hilog.info(DOMAIN_NUMBER, TAG, `windowStage active.`);
+            logger.i(TAG, `windowStage active.`);
             break;
           case window.WindowStageEventType.INACTIVE: // 失焦状态
-            hilog.info(DOMAIN_NUMBER, TAG, `windowStage inactive.`);
+            logger.i(TAG, `windowStage inactive.`);
             break;
           case window.WindowStageEventType.HIDDEN: // 切到后台
-            hilog.info(DOMAIN_NUMBER, TAG, `windowStage background.`);
+            logger.i(TAG, `windowStage background.`);
             break;
           case window.WindowStageEventType.RESUMED: // 前台可交互状态
-            hilog.info(DOMAIN_NUMBER, TAG, `windowStage resumed.`);
+            logger.i(TAG, `windowStage resumed.`);
             break;
           case window.WindowStageEventType.PAUSED: // 前台不可交互状态
-            hilog.info(DOMAIN_NUMBER, TAG, `windowStage paused.`);
+            logger.i(TAG, `windowStage paused.`);
             break;
           default:
             break;
         }
       });
     } catch (exception) {
-      hilog.error(DOMAIN_NUMBER, TAG,
+      logger.e(TAG,
         `Failed to enable the listener for window stage event changes. Cause: ${JSON.stringify(exception)}`);
     }
 
     // Main window is created, set main page for this ability
-    hilog.info(DOMAIN_NUMBER, TAG, '%{public}s', 'Ability onWindowStageCreate');
+    logger.i(TAG, '%{public}s', 'Ability onWindowStageCreate');
 
+    /*
+     * 应用中的 UIAbility 在启动过程中，需要指定启动页面，否则应用启动后会因为没有默认加载页面而导致白屏。可以在 UIAbility 的 onWindowStageCreate()
+     * 生命周期回调中，通过 WindowStage 对象的 loadContent() 方法设置启动页面。
+     */
     windowStage.loadContent('pages/Index', this.sharedStorage, (err) => {
       if (err.code) {
-        hilog.error(DOMAIN_NUMBER, TAG, 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
+        logger.e(TAG, 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
         return;
       }
       // PersistentStorage 和 UI 实例相关联，持久化操作需要在 UI 实例初始化成功后（即 loadContent 传入的回调被调用时）才可以被调用，早于
@@ -126,8 +149,13 @@ export default class EntryAbility extends UIAbility {
       PersistentStorage.persistProp("number", -100)
       // 将设备的语言 code 存入 AppStorage，如果 Environment 中没有 languageCode，则设置为默认值 en。
       Environment.envProp("languageCode", "en");
-      hilog.info(DOMAIN_NUMBER, TAG, 'Succeeded in loading the content.');
+      logger.i(TAG, 'Succeeded in loading the content.');
     });
+  }
+
+  /** 在WindowStage销毁前执行，此时 WindowStage 还可以使用。*/
+  onWindowStageWillDestroy(windowStage: window.WindowStage): void {
+
   }
 
   /*
@@ -145,12 +173,12 @@ export default class EntryAbility extends UIAbility {
     } catch (err) {
       let code = (err as BusinessError).code;
       let message = (err as BusinessError).message;
-      hilog.error(DOMAIN_NUMBER, TAG,
+      logger.e(TAG,
         `Failed to disable the listener for windowStageEvent. Code is ${code}, message is ${message}`);
     }
 
     // Main window is destroyed, release UI related resources
-    hilog.info(DOMAIN_NUMBER, TAG, '%{public}s', 'Ability onWindowStageDestroy');
+    logger.i(TAG, '%{public}s', 'Ability onWindowStageDestroy');
   }
 
   /*
@@ -159,7 +187,7 @@ export default class EntryAbility extends UIAbility {
    UIAbility的 销毁。
    */
   onDestroy(): void {
-    hilog.info(DOMAIN_NUMBER, TAG, '%{public}s', 'Ability onDestroy');
+    logger.i(TAG, '%{public}s', 'Ability onDestroy');
   }
 
   /*
@@ -170,7 +198,7 @@ export default class EntryAbility extends UIAbility {
   */
   onForeground(): void {
     // Ability has brought to foreground
-    hilog.info(DOMAIN_NUMBER, TAG, '%{public}s', 'Ability onForeground');
+    logger.i(TAG, '%{public}s', 'Ability onForeground');
   }
 
   /*
@@ -182,7 +210,7 @@ export default class EntryAbility extends UIAbility {
    */
   onBackground(): void {
     // Ability has back to background
-    hilog.info(DOMAIN_NUMBER, TAG, '%{public}s', 'Ability onBackground');
+    logger.i(TAG, '%{public}s', 'Ability onBackground');
   }
 
   /*
